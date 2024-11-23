@@ -45,3 +45,42 @@ def csv_to_json():
         print("Помилка: Не вдалося декодувати JSON.")
     except Exception as e:
         print(f"Невідома помилка: {e}")
+
+# (Чорномаз Вікторія КН-33.1)
+# Функція для переписування даних з JSON у CSV, з додаванням нових рядків
+def json_to_csv_with_new_rows():
+    try:
+        # Читання даних з JSON файлу
+        with open('books.json', mode='r') as file:
+            data = json.load(file)
+
+        # Додаємо нові книги
+        new_books = {
+            "Brave New World": {"author": "Aldous Huxley", "year": 1932},
+            "Moby Dick": {"author": "Herman Melville", "year": 1851},
+            "War and Peace": {"author": "Leo Tolstoy", "year": 1869}
+        }
+        
+        # Оновлюємо словник data новими книгами
+        data.update(new_books)
+
+        # Запис у новий CSV файл
+        with open('books_updated.csv', mode='w', newline='') as file:
+            writer = csv.DictWriter(file, fieldnames=["title", "author", "year"])
+            writer.writeheader()
+            for title, info in data.items():
+                writer.writerow({"title": title, "author": info["author"], "year": info["year"]})
+        
+        print("CSV файл 'books_updated.csv' успішно створено.")
+        
+    except FileNotFoundError:
+        print("Помилка: Файл 'books.json' не знайдено.")
+    except json.JSONDecodeError:
+        print("Помилка: Не вдалося декодувати JSON.")
+    except Exception as e:
+        print(f"Невідома помилка: {e}")
+
+# Виконання
+create_csv_file()
+csv_to_json()
+json_to_csv_with_new_rows()
